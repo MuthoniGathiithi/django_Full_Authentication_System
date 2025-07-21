@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 100%, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
+            animation: gradient-shift 10s ease-in-out infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #60a5fa;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .welcome-text {
+            color: #e2e8f0;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .profile-header h1 {
+            color: #f8fafc;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-shadow: 0 0 30px rgba(248, 250, 252, 0.2);
+        }
+
+        .profile-header p {
+            color: #94a3b8;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .dashboard-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(25px);
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            padding: 32px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa, #0ea5e9);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(59, 130, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .card-title {
+            color: #f8fafc;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .stat-number {
+            color: #60a5fa;
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #cbd5e1;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .floating-elements::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            right: 5%;
+            width: 150px;
+            height: 150px;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 50%;
+            animation: float-large 20s ease-in-out infinite;
+        }
+
+        .floating-elements::after {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            background: rgba(14, 165, 233, 0.04);
+            border-radius: 50%;
+            animation: float-large-reverse 18s ease-in-out infinite;
+        }
+
+        @keyframes float-large {
+            0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+            50% { transform: translateY(-30px) scale(1.1) rotate(180deg); }
+        }
+
+        @keyframes float-large-reverse {
+            0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+            50% { transform: translateY(30px) scale(0.9) rotate(-180deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 24px 16px;
+            }
+            
+            .profile-header h1 {
+                font-size: 36px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .navbar-content {
+                padding: 0 16px;
+            }
+            
+            .nav-actions {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements"></div>
+    
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">Dashboard</div>
+            <div class="nav-actions">
+                <span class="welcome-text">Welcome, {{ user.first_name|default:user.username }}!</span>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="profile-header">
+            <h1>Profile Dashboard</h1>
+            <p>Manage your account settings and view your activity overview</p>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-icon">👤</div>
+                <h3 class="card-title">Account Information</h3>
+                <p class="card-description">
+                    <strong>Username:</strong> {{ user.username }}<br>
+                    <strong>Email:</strong> {{ user.email }}<br>
+                    <strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}<br>
+                    <strong>Joined:</strong> {{ user.date_joined|date:"F d, Y" }}
+                </p>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">📊</div>
+                <h3 class="card-title">Activity Overview</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ user.last_login|timesince }}</span>
+                        <span class="stat-label">Last Login</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">⚙️</div>
+                <h3 class="card-title">Account Settings</h3>
+                <p class="card-description">
+                    Manage your account preferences, security settings, and personal information. 
+                    Update your profile to keep your information current.
+                </p>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">🔐</div>
+                <h3 class="card-title">Security Status</h3>
+                <p class="card-description">
+                    <strong>Account Status:</strong> {% if user.is_active %}Active{% else %}Inactive{% endif %}<br>
+                    <strong>Staff Status:</strong> {% if user.is_staff %}Yes{% else %}No{% endif %}<br>
+                    <strong>Superuser:</strong> {% if user.is_superuser %}Yes{% else %}No{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
