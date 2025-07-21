@@ -244,6 +244,27 @@
             <p>Join us today and get started</p>
         </div>
         
+        {% if success_message %}
+            <div class="form-success" style="color: #22c55e; margin-bottom: 20px; text-align: center; font-weight: bold;">{{ success_message }}</div>
+        {% endif %}
+        {% if form.errors or error_message %}
+            <div class="form-errors" style="color: #ef4444; margin-bottom: 20px; text-align: center; font-weight: bold;">
+                <ul style="list-style: none; padding: 0;">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                {% if error_message %}
+                    <li>{{ error_message }}</li>
+                {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+        
         <form method="post">
             {% csrf_token %}
             
