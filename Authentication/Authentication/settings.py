@@ -25,8 +25,17 @@ SECRET_KEY = 'django-insecure-a=3(a)(^qg=8v5pdl8d%j!0t@p=lds^@q$@f*k5p#-fuk9zwp=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# In your Authentication/Authentication/settings.py file
+# Find the ALLOWED_HOSTS line and replace it with:
 
+ALLOWED_HOSTS = [
+    'joycemuthoni.pythonanywhere.com',
+    'localhost',  # for local development
+    '127.0.0.1',  # for local development
+]
+
+# Alternative: If you want to allow all hosts (only for testing, not recommended for production):
+# ALLOWED_HOSTS = ['*']
 
 # Application definition
 
