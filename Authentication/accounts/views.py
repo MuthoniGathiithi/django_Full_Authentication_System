@@ -18,8 +18,13 @@ def signup_view(request):
                 user = form.save(commit=False)
                 user.set_password(form.cleaned_data['password'])
                 user.save()
-                success_message = 'Account created successfully! You can now log in.'
-                form = SignUpForm()  # Reset the form after success
+                # Log in the user after signup
+                user = authenticate(request, username=username, password=form.cleaned_data['password'])
+                if user is not None:
+                    login(request, user)
+                    return redirect('profile')
+                else:
+                    error_message = 'Account created, but could not log in. Please try logging in.'
         # else: errors will be shown by form.errors
     else:
         form = SignUpForm()
@@ -27,15 +32,21 @@ def signup_view(request):
 
 
 def login_view(request):
+    error = None
     if request.method == 'POST':
         username = request.POST.get('username')        
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('profile')
+        from django.contrib.auth.models import User
+        if not User.objects.filter(username=username).exists():
+            error = 'Account not registered.'
         else:
-            return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('profile')
+            else:
+                error = 'Invalid credentials.'
+        return render(request, 'accounts/login.html', {'error': error})
     return render(request, 'accounts/login.html')
 
 @login_required
