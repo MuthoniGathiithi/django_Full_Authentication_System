@@ -32,6 +32,9 @@ ALLOWED_HOSTS = [
     'joycemuthoni.pythonanywhere.com',
     'localhost',  # for local development
     '127.0.0.1',  # for local development
+
+    'django-full-authentication-system.onrender.com',
+
 ]
 
 # Alternative: If you want to allow all hosts (only for testing, not recommended for production):
